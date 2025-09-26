@@ -1,0 +1,8 @@
+body {
+  margin: 0;
+}
+.slick-prev:before, .slick-next:before {
+  color: #1B396A !important; 
+  font-size:   25px;          
+  
+}
