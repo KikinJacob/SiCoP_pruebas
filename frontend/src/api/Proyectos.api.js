@@ -1,24 +1,36 @@
 import axios from 'axios';
 
-const API_URL = "http://127.0.0.1:8000/proyecto/proyectos/";
+const API_URL = "http://127.0.0.1:8000/proyecto/proyectos-investigadores/";
+const API_URL_ADMIN = "http://127.0.0.1:8000/proyecto/proyectos-admin/";
 
-// OBTENER TODOS LOS COLABORADORES
+// OBTENER TODOS LOS PROYECTOS
 export const getProyectos = async () => {
   try {
-    const response = await axios.get(API_URL, {
+    const response = await axios.get(API_URL_ADMIN, {
       withCredentials: true
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching colaboradores:", error);
+    console.error("Error fetching proyectos:", error);
     throw error;
   }
 };
 
+// OBTENER LOS PROYECTOS DE UN SOLO INVESTIGADOR
+export const getProyectosInvestigador = async () => {
+  try {
+    const response = await axios.get(API_URL, {withCredentials: true});
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching proyectos: ", error);
+    throw error;
+  }
+}
+
 //OBTENER SOLO UNA CARRERA
 export const getProyecto = async (claveInterna) => {
   try {
-    const response = await axios.get(`${API_URL}${claveInterna}/`,{
+    const response = await axios.get(`${API_URL_ADMIN}${claveInterna}/`,{
       withCredentials: true  
     });
 
@@ -33,7 +45,7 @@ export const getProyecto = async (claveInterna) => {
 export const editEstatusProyecto = async (proyectoId, nuevoEstatus) => {
   try{
     const response = await axios.patch(
-      `${API_URL}${proyectoId}/`,
+      `${API_URL_ADMIN}${proyectoId}/`,
       { estatusProyecto: nuevoEstatus},
       {
         withCredentials: true
@@ -49,7 +61,7 @@ export const editEstatusProyecto = async (proyectoId, nuevoEstatus) => {
 export const editActionProyecto = async (proyectoId, nuevoAction) => {
   try {
     const response = await axios.patch(
-      `${API_URL}${proyectoId}/`,
+      `${API_URL_ADMIN}${proyectoId}/`,
       { action: nuevoAction},
       {withCredentials: true}
     );

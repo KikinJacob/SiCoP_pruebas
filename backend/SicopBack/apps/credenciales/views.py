@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from apps.credenciales.models import Credenciales
 from apps.credenciales.api.serializers import CredencialesSerializer
+from apps.investigador.models import Investigador 
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -33,7 +34,17 @@ class CheckAuthView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response({"authenticated": True, "username": request.user.username})
+        curp = None
+        try:
+            investigador = Investigador.objects.get(user=request.user)
+            curp = investigador.curp
+        except Investigador.DoesNotExist:
+            curp = None
+        return Response({
+            "authenticated": True,
+            "username": request.user.username,
+            "curp": curp
+        })
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]

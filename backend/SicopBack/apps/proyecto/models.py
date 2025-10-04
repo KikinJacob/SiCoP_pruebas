@@ -103,13 +103,13 @@ class Proyecto(models.Model):
         on_delete=models.CASCADE
     )
     liderProyecto = models.ForeignKey(
-         'investigador.Investigador',
-         to_field='curp',
-         db_column='liderProyecto',
-         on_delete=models.CASCADE,
-         null=True,   
-         blank=True   
-     )
+        'investigador.Investigador',
+        to_field='curp',
+        db_column='liderProyecto',
+        on_delete=models.CASCADE,
+        null=True,   
+        blank=True   
+    )
     VINCULADO_CHOICES = [
         ('Si', 'Si'),
         ('No', 'No'),

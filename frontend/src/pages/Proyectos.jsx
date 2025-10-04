@@ -8,7 +8,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { GridActionsCellItem, gridRowsDataRowIdToIdLookupSelector } from "@mui/x-data-grid";
 import { chechSession } from "../api/Credenciales.api.js";
 import { getAllEmpresas } from "../api/Empresa.api.js";
-import { getProyecto, getProyectos } from "../api/Proyectos.api.js";
+import { getProyecto, getProyectosInvestigador } from "../api/Proyectos.api.js";
 
 const STORAGE_KEY = "proyectosRows";
 const EDITABLES_KEY = "proyectosEditables";
@@ -19,33 +19,24 @@ export default function Proyectos() {
   const [selectedId, setSelectedId] = useState(null);
   const navigate = useNavigate();
 
-  // SABER SI ESTA LOGEADO
-  // useEffect(() => {
-  //   try {
-  //     const verification = async () => {
-  //       const isLoggedIn = await chechSession();
-  //       if (!isLoggedIn) {
-  //         navigate("/");
-  //       }
-  //     }
-  //     verification();
-  //   } catch (error) {
-  //     console.error("Error al verificar la sesión:", error);
-  //     navigate("/");
-  //   }
-  // }, [navigate]);
-
   // CARGAR LOS PROYECTOS EN LOS CAMPOS CORRESPONDIENTES
   useEffect(() => {
     try {
       const fetchProyectos = async () => {
-        const isLoggedIn = await chechSession();
-        if (!isLoggedIn) {
+        const dataSession = await chechSession();
+        if (!dataSession) {
           navigate("/");
           return;
         }
 
-        const data = await getProyectos();
+        let data;
+
+        if(dataSession.rol == "Administrador"){
+          data = await getProyecto();
+        } else {
+          data = await getProyectosInvestigador();
+        }
+
         const rowsWithId = data.map((proyecto) => ({
           ...proyecto,
           id: proyecto.claveInterna,
@@ -67,6 +58,7 @@ export default function Proyectos() {
 
   const handleEdit = async (id) => {
     try {
+      alert(id);
       const data = await getProyecto(id);
       console.log(data);
       navigate("/EditarProyecto", { state: { proyecto: data}});
