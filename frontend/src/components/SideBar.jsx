@@ -6,6 +6,7 @@ import MuiAppBar from "@mui/material/AppBar";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
 import ListItemButton from "@mui/material/ListItemButton";
+import CampaignIcon from "@mui/icons-material/Campaign";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DescriptionIcon from "@mui/icons-material/Description";
@@ -91,6 +92,15 @@ function SideBar() {
       <AppBar position="fixed" open={open} />
       <Drawer variant="permanent" open={open}>
         <List style={{ paddingTop: 100 }}>
+          {/* Convocatorias */}
+          <Tooltip title="Convocatorias" placement="right">
+            <ListItemButton
+              style={{ marginBottom: 20, justifyContent: "center" }}
+              onClick={() => navigate("/ConvocatoriasInvestigador")}
+            >
+              <CampaignIcon />
+            </ListItemButton>
+          </Tooltip>
           {/* Mis Proyectos */}
           <Tooltip title="Mis Proyectos" placement="right">
             <ListItemButton
