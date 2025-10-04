@@ -2,9 +2,10 @@ import { Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { Link } from "react-router-dom";
-import { logOut } from "../api/Credenciales.api.js";
+import { logOut, checkRol } from "../api/Credenciales.api.js";
 
 export default function NavBar({ user }) {
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -17,6 +18,20 @@ export default function NavBar({ user }) {
       console.error("Error al cerrar sesión:", error);
     }
   };
+
+  // FUNCION PARA EL MANEJO DEL CLICK DEL LOGO A LA PAGINA DE INICIO
+  const handleMove = async () => {
+    try {
+      const rol = await checkRol();
+      if(rol.Rol === "Administrador"){
+        navigate("/Administracion/Proyectos");
+      } else {
+        navigate("/Proyectos");
+      }
+    } catch (error) {
+      console.error("Error al identificar el rol del usuario: ", error);
+    }
+  }
 
   return (
     <nav
@@ -34,7 +49,7 @@ export default function NavBar({ user }) {
       data-bs-theme="dark"
     >
       <div className="container-fluid">
-        <Link className="navbar-brand bold" to="/Proyectos">
+        <Link className="navbar-brand bold" to="#" onClick={handleMove}>
           <p className="fs-3 bold m-0">SiCoP</p>
         </Link>
         <button
