@@ -8,6 +8,7 @@ export default function NavBar({ user }) {
 
   const navigate = useNavigate();
 
+  // FUNCION PARA LE MANEJO DEL CERRADO DE SESION
   const handleLogout = async () => {
     try {
       const logout = await logOut();
