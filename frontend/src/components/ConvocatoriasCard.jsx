@@ -5,14 +5,24 @@ import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardHeader, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-function ConvocatoriasCard({ convocatoria }) {
+function ConvocatoriasCard({ convocatoria, onClick }) {
   const navigate = useNavigate();
-  const { convocatoria:nombre, 
-          fechaInicioFinanciamiento,
-          fechaFinanciamiento } = convocatoria;
+
+  // Proporcionar valores por defecto si no se pasa convocatoria
+  const nombre = convocatoria?.convocatoria || "Convocatoria de Ejemplo";
+  const fechaInicioFinanciamiento = convocatoria?.fechaInicioFinanciamiento || "2024-01-01";
+  const fechaFinanciamiento = convocatoria?.fechaFinanciamiento || "2024-12-31";
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      navigate('../Administracion/ConvocatoriasDetalle');
+    }
+  };
 
   return (
-    <Card onClick={() => navigate('../Administracion/ConvocatoriasDetalle')} 
+    <Card onClick={handleClick}
       sx={{
         minHeight: { xs: 200, sm: 250, md: 300 },
         maxHeight: 'auto',
@@ -21,13 +31,13 @@ function ConvocatoriasCard({ convocatoria }) {
       }}
     >
       <CardActionArea>
-        <CardHeader sx={{ backgroundColor: "#E9F1FE" }}></CardHeader>
-        <CardContent sx={{ width: "100%", height: "60%" }}>
+        <CardHeader style={{ backgroundColor: "#E9F1FE" }}></CardHeader>
+        <CardContent style={{ width: "100%", height: "60%" }}>
           <Typography
             gutterBottom
             variant="h5"
             component="div"
-            sx={{ textAlign: "start" , overflow:'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+            style={{ textAlign: "start" }}
           >
             {nombre}
           </Typography>
@@ -36,7 +46,7 @@ function ConvocatoriasCard({ convocatoria }) {
             color="text.secondary"
             style={{ textAlign: "start" }}
           >
-            {fechaInicioFinanciamiento}
+            Fecha inicio: {fechaInicioFinanciamiento}
           </Typography>
           <Typography
             variant="body2"
@@ -49,7 +59,7 @@ function ConvocatoriasCard({ convocatoria }) {
               textOverflow: "ellipsis",
             }}
           >
-            {fechaInicioFinanciamiento}
+            Fecha fin: {fechaFinanciamiento}
           </Typography>
         </CardContent>
       </CardActionArea>
