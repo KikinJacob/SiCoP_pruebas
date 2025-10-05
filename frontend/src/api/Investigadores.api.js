@@ -25,7 +25,7 @@ export const getAllInvestigadores = async () => {
 
 // Obtener por ID
 export const getInvestigador = async (id) => {
-  const res = await invUrl.get(`/${id}/`);
+  const res = await invUrl.get(`/${id}/`, {withCredentials: true});
   return res.data;
 };
 
@@ -37,7 +37,7 @@ export const createInvestigador = async (data) => {
 
 // Actualizar
 export const updateInvestigador = async (id, data) => {
-  const res = await invUrl.put(`/${id}/`, data);
+  const res = await invUrl.put(`/${id}/`, data, {withCredentials: true});
   return res.data;
 };
 

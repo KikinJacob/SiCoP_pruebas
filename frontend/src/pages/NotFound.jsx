@@ -1,8 +1,25 @@
 import React from 'react';
 import { Typography, Button, Box } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import { checkRol } from "../api/Credenciales.api.js";
 
 function NotFound() {
+    const navigate = useNavigate();
+
+    const handleMove = async () => {
+      try {
+        const rol = await checkRol();
+        if (rol.Rol === "Administrador") {
+          navigate("/Administracion/Proyectos");
+        } else {
+          navigate("/Proyectos");
+        }
+      } catch (error) {
+        console.error("Error al identificar el rol del usuario: ", error);
+      }
+    };
+
   return (
     <Box
       sx={{
@@ -22,7 +39,7 @@ function NotFound() {
       <Typography variant="h5" sx={{ marginBottom: '20px', color: '#555' }}>
         Esta sección aún está en desarrollo.
       </Typography>
-      <Link to="/Proyectos" style={{ textDecoration: 'none' }}>
+      <Link to="#" onClick={() => handleMove()} style={{ textDecoration: 'none' }}>
         <Button
           variant="contained"
           color="primary"

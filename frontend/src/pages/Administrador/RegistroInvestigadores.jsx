@@ -1,11 +1,11 @@
 
 import React from "react";
-import { get, useForm, Controller} from "react-hook-form";
-import { useNavigate, useParams} from "react-router-dom";
-import { Container,Typography,TextField,Select,MenuItem,Button,FormControl,InputLabel,Grid,Box,CssBaseline,FormHelperText, Collapse,Alert,IconButton} from "@mui/material";
+import { get, useForm, Controller } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import { Container, Typography, TextField, Select, MenuItem, Button, FormControl, InputLabel, Grid, Box, CssBaseline, FormHelperText, Collapse, Alert, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { createInvestigador, getInvestigador, updateInvestigador } from "../../api/Investigadores.api"; 
-import { getCarreras} from "../../api/carrera.api";
+import { createInvestigador, getInvestigador, updateInvestigador } from "../../api/Investigadores.api";
+import { getCarreras } from "../../api/carrera.api";
 
 function RegistroInvestigadores() {
   const navigate = useNavigate();
@@ -13,30 +13,31 @@ function RegistroInvestigadores() {
     register,
     handleSubmit,
     formState: { errors },
-    reset, 
+    reset,
     control
   } = useForm();
-  const {id} = useParams();
-  const isEdit = Boolean(id); 
+  const { id } = useParams();
+  const isEdit = Boolean(id);
   const [carreras, setCarreras] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [mensajeError, setMensajeError] = React.useState("");
   const messages = {
     req: "Este campo es obligatorio",
   };
-  
+
   //CARGAR LAS CARRERAS
   React.useEffect(() => {
     getCarreras()
       .then(data => setCarreras(Array.isArray(data) ? data : []))
       .catch(() => setCarreras([]));
-    console.log("carreras",carreras);
+    console.log("carreras", carreras);
   }, []);
 
   //CARGA DATOS DEL INVESTIGADOR PARA EDITAR
   React.useEffect(() => {
-    if(id) {
-      getInvestigador(id).then(data=>{   
+    if (id) {
+      getInvestigador(id).then(data => {
+        console.log(data);
         reset(data); //LLena el formulario con los datos que le pase
       });
     }
@@ -45,9 +46,9 @@ function RegistroInvestigadores() {
   //ENVIO DEL FORMULARIO
   const onSubmit = async (data) => {
     try {
-      if(isEdit){
+      if (isEdit) {
         await updateInvestigador(id, data);
-      }else{
+      } else {
         await createInvestigador(data);
       }
       navigate("/Administracion/Investigadores");
@@ -77,12 +78,12 @@ function RegistroInvestigadores() {
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <CssBaseline />
       <Box sx={{ flexGrow: 1, overflowY: "auto", mt: 7, mb: 7, alignContent: 'center' }}>
-        <Container maxWidth="lg" sx={{padding:'20px 30px', margin:'auto'}}>
+        <Container maxWidth="lg" sx={{ padding: '20px 30px', margin: 'auto' }}>
           <Typography variant="h4" align="center">
             {isEdit ? "Actualizar Investigador" : "Registro de Investigador"}
           </Typography>
-          <Typography variant="body1" align="center" style={{ marginTop: "10px"}}>
-              Captura los campos con la información correspondiente, valida la información antes de registrar.
+          <Typography variant="body1" align="center" style={{ marginTop: "10px" }}>
+            Captura los campos con la información correspondiente, valida la información antes de registrar.
           </Typography>
           {/* ALERTAS */}
           <Collapse in={open}>
@@ -106,21 +107,23 @@ function RegistroInvestigadores() {
             </Alert>
           </Collapse>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container className="p-3" sx={{justifyContent: 'space-between'}}>
+            <Grid container className="p-3" sx={{ justifyContent: 'space-between' }}>
               {/* CURP */}
-              <Grid item xs={12} sm={5.8} sx={{ my: 1}}>
-                <label htmlFor="inputCurp" className="col-form-label">
-                  CURP
-                </label>
-                <TextField
-                  placeholder="AAAA000000HDFRNS00"
-                  variant="outlined"
-                  fullWidth
-                  {...register("curp", { required: true })}
-                  error={!!errors.curp}
-                  helperText={errors.curp && messages.req}
-                />
-              </Grid>
+              {!isEdit && (
+                <Grid item xs={12} sm={5.8} sx={{ my: 1 }}>
+                  <label htmlFor="inputCurp" className="col-form-label">
+                    CURP
+                  </label>
+                  <TextField
+                    placeholder="AAAA000000HDFRNS00"
+                    variant="outlined"
+                    fullWidth
+                    {...register("curp", { required: true })}
+                    error={!!errors.curp}
+                    helperText={errors.curp && messages.req}
+                  />
+                </Grid>
+              )}
               {/* ID CREDENCIAL */}
               {/* <Grid item xs={12} sm={5.8} sx={{ my: 1}}>
                 <label htmlFor="id_Credencial" className="col-form-label">
@@ -136,7 +139,7 @@ function RegistroInvestigadores() {
                 />
               </Grid> */}
               {/* NOMBRE */}
-              <Grid item xs={12} sm={5.8} sx={{ my: 1}}>
+              <Grid item xs={12} sm={5.8} sx={{ my: 1 }}>
                 <label htmlFor="inputNombre" className="col-form-label">
                   Nombre(s)
                 </label>
@@ -150,7 +153,7 @@ function RegistroInvestigadores() {
                 />
               </Grid>
               {/* APELLIDOS */}
-              <Grid item xs={12} sm={5.8} sx={{ my: 1}}>
+              <Grid item xs={12} sm={5.8} sx={{ my: 1 }}>
                 <label htmlFor="inputApellidos" className="col-form-label">
                   Apellido(s)
                 </label>
@@ -164,35 +167,35 @@ function RegistroInvestigadores() {
                 />
               </Grid>
               {/* CARRERA */}
-              <Grid item xs={12} sm={5.8} sx={{ my: 1}}>
+              <Grid item xs={12} sm={5.8} sx={{ my: 1 }}>
                 <label className="col-form-label">Carrera</label>
                 <FormControl fullWidth error={!!errors.claveCarrera}>
-                <InputLabel>Carrera</InputLabel>
-                <Controller
-                  name="claveCarrera"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <Select
-                      label="Carrera"
-                      {...field}
-                      value={field.value ?? ""} // Para evitar undefined
-                    >
-                      {carreras.map((carrera) => (
-                        <MenuItem key={carrera.claveCarrera} value={carrera.claveCarrera}>
-                          {carrera.nombreCarrera}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                  <InputLabel>Carrera</InputLabel>
+                  <Controller
+                    name="claveCarrera"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Select
+                        label="Carrera"
+                        {...field}
+                        value={field.value ?? ""} // Para evitar undefined
+                      >
+                        {carreras.map((carrera) => (
+                          <MenuItem key={carrera.claveCarrera} value={carrera.claveCarrera}>
+                            {carrera.nombreCarrera}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    )}
+                  />
+                  {errors.claveCarrera && (
+                    <FormHelperText>{messages.req}</FormHelperText>
                   )}
-                />
-                {errors.claveCarrera && (
-                  <FormHelperText>{messages.req}</FormHelperText>
-                )}
-              </FormControl>
+                </FormControl>
               </Grid>
               {/* CORREO */}
-              <Grid item xs={12} sm={5.8} sx={{ my: 1}}>
+              <Grid item xs={12} sm={5.8} sx={{ my: 1 }}>
                 <label htmlFor="inputCorreo" className="col-form-label">
                   Correo
                 </label>
@@ -207,7 +210,7 @@ function RegistroInvestigadores() {
                 />
               </Grid>
             </Grid>
-            
+
             {/* BOTONES */}
             <Grid container spacing={2} className="p-3">
               <Grid item xs={12}
@@ -216,7 +219,7 @@ function RegistroInvestigadores() {
                 <Button
                   variant="outlined"
                   onClick={() => navigate("/Administracion/Investigadores")}
-                  style={{ borderColor: "#1B396A", color: "#1B396A", borderRadius: "20px",}}
+                  style={{ borderColor: "#1B396A", color: "#1B396A", borderRadius: "20px", }}
                   onMouseEnter={(e) => (
                     (e.target.style.backgroundColor = "#1B396A"),
                     (e.target.style.color = "#fff")
@@ -231,7 +234,7 @@ function RegistroInvestigadores() {
                 <Button
                   type="submit"
                   variant="contained"
-                  style={{ backgroundColor: "#1B396A", color: "#fff", borderRadius: "20px",}}
+                  style={{ backgroundColor: "#1B396A", color: "#fff", borderRadius: "20px", }}
                   onMouseEnter={(e) =>
                     (e.target.style.backgroundColor = "#162e54")
                   }

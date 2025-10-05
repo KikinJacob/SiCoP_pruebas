@@ -1,14 +1,13 @@
 import { Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { logOut, checkRol } from "../api/Credenciales.api.js";
+import { logOut, checkRol, chechSession } from "../api/Credenciales.api.js";
 
 export default function NavBar({ user }) {
-
   const navigate = useNavigate();
 
-  // FUNCION PARA LE MANEJO DEL CERRADO DE SESION
+  // FUNCION PARA EL MANEJO DEL CERRADO DE SESION
   const handleLogout = async () => {
     try {
       const logout = await logOut();
@@ -24,7 +23,7 @@ export default function NavBar({ user }) {
   const handleMove = async () => {
     try {
       const rol = await checkRol();
-      if(rol.Rol === "Administrador"){
+      if (rol.Rol === "Administrador") {
         navigate("/Administracion/Proyectos");
       } else {
         navigate("/Proyectos");
@@ -32,7 +31,24 @@ export default function NavBar({ user }) {
     } catch (error) {
       console.error("Error al identificar el rol del usuario: ", error);
     }
-  }
+  };
+
+  // VERIFICAR SESIÓN PERIÓDICAMENTE
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const sessionActive = await chechSession(); // Verifica si la sesión sigue activa
+        if (!sessionActive) {
+          navigate("/"); // Redirige al login si la sesión expiró
+        }
+      } catch (error) {
+        console.error("Error al verificar la sesión:", error);
+        navigate("/"); // Redirige al login en caso de error
+      }
+    }, 5 * 60 * 1000); // Verifica cada 5 minutos (ajusta el tiempo según sea necesario)
+
+    return () => clearInterval(interval); // Limpia el intervalo al desmontar el componente
+  }, [navigate]);
 
   return (
     <nav
@@ -45,7 +61,7 @@ export default function NavBar({ user }) {
         alignItems: "center",
         position: "fixed",
         top: 0,
-        zIndex: 1300
+        zIndex: 1300,
       }}
       data-bs-theme="dark"
     >
@@ -78,11 +94,18 @@ export default function NavBar({ user }) {
             </a>
             <ul className="dropdown-menu">
               <li>
-                {!user ? 
-                <div>
-                  <Link className="dropdown-item" to={"/NoTerminada"}>Mi perfil</Link>
-                  <Link className="dropdown-item" to={"/Proyectos"}>Mis proyectos</Link>
-                </div> : ""}
+                {!user ? (
+                  <div>
+                    <Link className="dropdown-item" to={"/NoTerminada"}>
+                      Mi perfil
+                    </Link>
+                    <Link className="dropdown-item" to={"/Proyectos"}>
+                      Mis proyectos
+                    </Link>
+                  </div>
+                ) : (
+                  ""
+                )}
                 <hr className="dropdown-divider" />
                 <button className="dropdown-item" onClick={handleLogout}>
                   Cerrar sesión

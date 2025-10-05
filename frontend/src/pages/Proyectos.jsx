@@ -58,7 +58,6 @@ export default function Proyectos() {
 
   const handleEdit = async (id) => {
     try {
-      alert(id);
       const data = await getProyecto(id);
       console.log(data);
       navigate("/EditarProyecto", { state: { proyecto: data}});
