@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   CssBaseline,
@@ -20,10 +20,25 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ConvocatoriasCard from "../components/ConvocatoriasCard";
 import SideBar from "../components/SideBar";
+import { getAllConvocatorias } from "../api/Convocatoria.api";
 
 export default function ConvocatoriasInvestigador({ user = { type: "Investigador" } }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedConvocatoria, setSelectedConvocatoria] = useState(null);
+
+  useEffect(() => {
+    try {
+      const fetchConvocatorias = async () => {
+        const data = await getAllConvocatorias();
+        console.log(data);
+      }
+
+      fetchConvocatorias();
+    } catch (error) {
+      console.error("Error al cargar las convocatorias: ", error);
+      throw error;
+    }
+  }, [])
 
   // Datos de ejemplo para las convocatorias
   const convocatorias = [

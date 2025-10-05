@@ -36,6 +36,42 @@ class Convocatoria(models.Model):
             'max_length': 'La institución de financiamiento no puede exceder 200 caracteres.',
         }
     )
+    
+    # NUEVOS CAMPOS AGREGADOS
+    descripcion = models.TextField(
+        max_length=500,
+        blank=True, null=True,
+        error_messages={
+            'max_length': 'La descripción no puede exceder 500 caracteres.',
+        }
+    )
+    presupuesto = models.DecimalField(
+        max_digits=12, decimal_places=2,
+        blank=True, null=True,
+        error_messages={
+            'max_digits': 'El presupuesto no puede exceder 12 dígitos.',
+            'decimal_places': 'El presupuesto debe tener 2 decimales.',
+        }
+    )
+    fechaInicioConvocatoria = models.DateField(
+        auto_now=False,
+        auto_now_add=False,
+        null=True,
+        blank=True
+    )
+    fechaFinConvocatoria = models.DateField(
+        auto_now=False,
+        auto_now_add=False,
+        null=True,
+        blank=True
+    )
+    requisitos = models.TextField(
+        max_length=500,
+        blank=True, null=True,
+        error_messages={
+            'max_length': 'Los requisitos no pueden exceder 500 caracteres.',
+        }
+    )
 
     def __str__(self):
         return self.convocatoria
