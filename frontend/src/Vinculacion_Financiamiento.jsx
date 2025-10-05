@@ -21,10 +21,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Avatar,
 } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import WarningIcon from "@mui/icons-material/Warning";
 import Footer from "./components/Footer";
 import { useState, useEffect } from "react";
-import { getAllConvocatorias } from "./api/Convocatoria.api.js"
+import { getAllConvocatorias } from "./api/Convocatoria.api.js";
 import { useRegistroProyecto } from "./components/Context.jsx";
 import { createProyecto } from "./api/Proyectos.api.js";
 
@@ -39,6 +42,8 @@ function VinculacionFinanciamiento() {
   } = useForm();
 
   const [openModal, setOpenModal] = useState(false);
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+  const [formData, setFormData] = useState(null);
   const [convocatorias, setConvocatorias] = useState([]);
   const tieneFinanciamiento = watch("tieneFinanciamiento");
   const { updateProyecto, proyecto } = useRegistroProyecto();
@@ -51,24 +56,32 @@ function VinculacionFinanciamiento() {
   ];
 
   const onSubmit = async (data) => {
+    // Guardar los datos del formulario para usar en la confirmación
+    setFormData(data);
+    setOpenConfirmModal(true);
+  };
+
+  const handleConfirmRegistration = async () => {
     const datosCompletos = {
       ...proyecto,
-      ...data,
-      clave_convocatoria: data.convocatoria,
-      financiamiento: data.tieneFinanciamiento,
+      ...formData,
+      clave_convocatoria: formData.convocatoria,
+      financiamiento: formData.tieneFinanciamiento,
     };
 
     try {
-      console.log(data);
+      console.log(formData);
       const response = await createProyecto(datosCompletos);
       localStorage.clear();
       console.log("Proyecto creado exitosamente:", response);
+      setOpenConfirmModal(false);
       setOpenModal(true);
     } catch (error) {
       console.error(
         " Error al crear proyecto:",
         error.response ? error.response.data : error.message
       );
+      setOpenConfirmModal(false);
     }
   };
 
@@ -83,6 +96,11 @@ function VinculacionFinanciamiento() {
   const handleCloseModal = () => {
     setOpenModal(false);
     navigate("/Proyectos");
+  };
+
+  const handleCloseConfirmModal = () => {
+    setOpenConfirmModal(false);
+    setFormData(null);
   };
 
   return (
@@ -244,14 +262,180 @@ function VinculacionFinanciamiento() {
             </Grid>
           </form>
 
-          {/* Modal */}
-          <Dialog open={openModal} onClose={handleCloseModal}>
-            <DialogTitle>Registro Exitoso</DialogTitle>
-            <DialogContent>
-              <DialogContentText>Proyecto registrado</DialogContentText>
+          {/* Modal de Confirmación */}
+          <Dialog
+            open={openConfirmModal}
+            onClose={handleCloseConfirmModal}
+            maxWidth="sm"
+            fullWidth
+            PaperProps={{
+              sx: {
+                borderRadius: 3,
+                boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+              },
+            }}
+          >
+            <DialogTitle
+              sx={{
+                textAlign: "center",
+                p: 3,
+                backgroundColor: "#1B396A",
+                color: "white",
+                fontWeight: "bold",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                <Avatar
+                  sx={{
+                    bgcolor: "rgba(255,255,255,0.2)",
+                    width: 60,
+                    height: 60,
+                  }}
+                >
+                  <WarningIcon fontSize="large" />
+                </Avatar>
+                <Typography variant="h6" fontWeight="bold">
+                  Confirmar Registro de Proyecto
+                </Typography>
+              </Box>
+            </DialogTitle>
+            <DialogContent sx={{ pt: 3, textAlign: "center" }}>
+              <DialogContentText
+                sx={{
+                  fontSize: "1.1rem",
+                  color: "text.primary",
+                  mb: 2,
+                }}
+              >
+                ¿Está seguro de que desea registrar este proyecto?
+              </DialogContentText>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mb: 2 }}
+              >
+                Una vez registrado, el proyecto será guardado en el sistema y podrá
+                ser consultado posteriormente.
+              </Typography>
             </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseModal} color="primary" autoFocus>
+            <DialogActions
+              sx={{
+                p: 3,
+                justifyContent: "center",
+                gap: 2,
+              }}
+            >
+              <Button
+                onClick={handleCloseConfirmModal}
+                variant="outlined"
+                sx={{
+                  borderRadius: 2,
+                  px: 3,
+                  py: 1,
+                  borderColor: "#1B396A",
+                  color: "#1B396A",
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "rgba(27, 57, 106, 0.05)",
+                  },
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleConfirmRegistration}
+                variant="contained"
+                autoFocus
+                sx={{
+                  borderRadius: 2,
+                  px: 3,
+                  py: 1,
+                  backgroundColor: "#1B396A",
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#153056",
+                  },
+                }}
+              >
+                Registrar Proyecto
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* Modal de Éxito */}
+          <Dialog
+            open={openModal}
+            onClose={handleCloseModal}
+            maxWidth="sm"
+            fullWidth
+            PaperProps={{
+              sx: {
+                borderRadius: 3,
+                boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+              },
+            }}
+          >
+            <DialogTitle
+              sx={{
+                textAlign: "center",
+                p: 3,
+                backgroundColor: "#1B396A",
+                color: "white",
+                fontWeight: "bold",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                <Avatar
+                  sx={{
+                    bgcolor: "rgba(255,255,255,0.2)",
+                    width: 60,
+                    height: 60,
+                  }}
+                >
+                  <CheckCircleIcon fontSize="large" />
+                </Avatar>
+                <Typography variant="h6" fontWeight="bold">
+                  ¡Registro Exitoso!
+                </Typography>
+              </Box>
+            </DialogTitle>
+            <DialogContent sx={{ pt: 3, textAlign: "center" }}>
+              <DialogContentText
+                sx={{ fontSize: "1.1rem", color: "text.primary" }}
+              >
+                El proyecto ha sido registrado correctamente en el sistema.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions sx={{ p: 3, justifyContent: "center" }}>
+              <Button
+                onClick={handleCloseModal}
+                variant="contained"
+                autoFocus
+                sx={{
+                  borderRadius: 2,
+                  px: 4,
+                  py: 1,
+                  backgroundColor: "#1B396A",
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#153056",
+                  },
+                }}
+              >
                 Aceptar
               </Button>
             </DialogActions>
