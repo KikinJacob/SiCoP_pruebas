@@ -96,6 +96,9 @@ function App() {
 
               {/* modo Editar */}
               <Route path="/Administracion/RegistroInvestigador/:id" element={<RegistroInvestigadores />} />
+
+              {/* Ruta no existente */}
+              <Route path="*" element={<NotFound/>}/>
             </Routes>
           </Layout>
         </RegistroProyectoProvider>
