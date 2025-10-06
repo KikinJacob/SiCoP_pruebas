@@ -46,3 +46,29 @@ export const deleteInvestigador = async (id) => {
   await invUrl.delete(`/${id}/`);
   return true;
 };
+
+// Dar Acceso
+export const darAcceso = async (id) => {
+  try {
+    const response = await axios.post(`http://127.0.0.1:8000/investigador/${id}/dar-acceso/`, {},  {
+      withCredentials: true 
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error con el servidor al mostrar a los investigadores! : ", error);
+    throw error;
+  }
+};
+
+// Quitar Acceso
+export const quitarAcceso = async (id) => {
+  try {
+    const response = await axios.post(`http://127.0.0.1:8000/investigador/${id}/quitar-acceso/`, {},  {
+      withCredentials: true 
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error con el servidor al mostrar a los investigadores! : ", error);
+    throw error;
+  }
+};

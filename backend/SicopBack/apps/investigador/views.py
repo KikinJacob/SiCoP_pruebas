@@ -15,24 +15,70 @@ class InvestigadorViewSet(viewsets.ModelViewSet):
     serializer_class = InvestigadorSerializer
 
 class DarAccesoInvestigador(APIView):
-    def post(self, request):
-        investigador_id = request.data.get('id')
+    permission_classes = [IsAuthenticated]
+    def post(self, request, pk): 
         try:
-            investigador = Investigador.objects.get(id=investigador_id)
+            investigador = Investigador.objects.get(curp=pk)
+            
             if not investigador.user:
-                # Crea usuario con el correo como username y email
+                # Crear usuario con correo como username y email
+                password_generada = "cambio123"
                 user = User.objects.create_user(
                     username=investigador.correo,
                     email=investigador.correo,
-                    password=User.objects.make_random_password()
+                    password=password_generada
                 )
                 investigador.user = user
                 investigador.save()
-                # Aquí podrías enviar un correo con la contraseña generada
-            return Response({"detail": "Acceso otorgado"}, status=status.HTTP_200_OK)
+
+                # Retornar la contraseña generada si quieres
+                return Response({
+                    "detail": "Acceso otorgado",
+                    "usuario": investigador.correo,
+                    "password": password_generada
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": "El investigador ya tiene acceso"}, status=status.HTTP_400_BAD_REQUEST)
+
         except Investigador.DoesNotExist:
             return Response({"detail": "Investigador no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
+class QuitarAccesoInvestigador(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, pk):
+        try:
+            # Buscar al investigador por su CURP
+            investigador = Investigador.objects.get(curp=pk)
+
+            # Verificar si el investigador tiene un usuario asociado
+            if investigador.user:
+                # Eliminar las credenciales asociadas (opcional)
+                if investigador.id_Credencial:
+                    investigador.id_Credencial.delete()
+
+                # Eliminar el usuario asociado
+                investigador.user.delete()
+
+                # Desasociar el usuario y las credenciales del investigador
+                investigador.user = None
+                investigador.id_Credencial = None
+                investigador.save()
+
+                return Response(
+                    {"detail": "Acceso eliminado correctamente."},
+                    status=status.HTTP_200_OK
+                )
+            else:
+                return Response(
+                    {"detail": "El investigador no tiene acceso asignado."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        except Investigador.DoesNotExist:
+            return Response(
+                {"detail": "Investigador no encontrado."},
+                status=status.HTTP_404_NOT_FOUND
+            )
 class InvestigadorListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Investigador.objects.all()

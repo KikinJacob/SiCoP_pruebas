@@ -1,13 +1,14 @@
 import React from "react";
 import TableViewer from "../../components/TableViewer";
-import { Box, Fab, Typography } from "@mui/material";
+import { Box, Fab, Tooltip, Typography } from "@mui/material";
 import SideBarAdmin from "../../components/SideBarAdmin";
 import AddIcon from "@mui/icons-material/Add";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { useNavigate } from "react-router-dom";
-import { getAllInvestigadores, deleteInvestigador } from "../../api/Investigadores.api";
+import { getAllInvestigadores, deleteInvestigador, darAcceso, quitarAcceso } from "../../api/Investigadores.api";
 import { useState } from "react";
 import { getCarreras } from "../../api/carrera.api";
 import { chechSession, checkRol } from "../../api/Credenciales.api";
@@ -30,7 +31,6 @@ function CrudInvestigadores() {
     const fetchInvestigadores = async () => {
       const isLoggedIn = await chechSession();
       const rol = await checkRol();
-
       if (!isLoggedIn || rol.Rol !== "Administrador") {
         navigate("/");
         return;
@@ -49,6 +49,7 @@ function CrudInvestigadores() {
             apellidos: item.apellidos,
             correo: item.correo,
             nombreCarrera: carerraObj ? carerraObj.nombreCarrera : "",
+            user: item.user,
           };
         })
         console.log(mapCarreras);
@@ -57,6 +58,22 @@ function CrudInvestigadores() {
     };
     fetchInvestigadores();
   }, []);
+
+  // FUNCION PARA DAR ACCESO AL INVESTIGADOR
+  const handleAcceso = async (row) => {
+    try {
+      let response;
+      if(row.user){
+        response = await quitarAcceso(row.id);
+      } else {
+        response = await darAcceso(row.id);
+      }
+      return response;
+    } catch (error) {
+      console.error("Error al dar acceso al investigador: ", error);
+      throw error;
+    }
+  }
 
   // Agrega la columna de acciones dinámicamente para usar navigate
   const columnsWithNavigate = [
@@ -93,6 +110,34 @@ function CrudInvestigadores() {
         />,
       ],
     },
+    {
+      field: "credenciales",
+      type: "actions",
+      headerName: "Credenciales de acceso",
+      width: 150,
+      getActions: ({ row }) => [
+        <Tooltip
+          key={`tooltip-${row.curp}`}
+          title={row.user ? "Quitar Acceso" : "Dar acceso"}
+          arrow
+          disableInteractive
+        >
+          <span>
+            <GridActionsCellItem
+              key={`accion-${row.curp}`}
+              icon={<ManageAccountsIcon />}
+              label={row.user ? "Quitar Acceso" : "Dar acceso"}
+              sx={{
+                color: !row.user ? "primary.main" : "reed.500",
+              }}
+              onClick={() => handleAcceso(row)}
+              // disabled={!!row.user}
+            />
+          </span>
+        </Tooltip>,
+      ],
+    }
+
   ];
 
   return (
