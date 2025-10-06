@@ -527,13 +527,14 @@ function SideBar() {
             borderRadius: 3,
             boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
             overflow: 'hidden',
-            width: '380px'
+            width: '350px',
+            maxHeight: '400px'
           }
         }}
       >
         <DialogTitle sx={{
           textAlign: 'center',
-          p: 2.5,
+          p: 2,
           backgroundColor: '#1B396A',
           color: 'white',
           fontWeight: 'bold',
@@ -543,34 +544,34 @@ function SideBar() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 1.5
+            gap: 1
           }}>
             <Avatar sx={{
               bgcolor: 'rgba(255,255,255,0.2)',
-              width: 50,
-              height: 50
+              width: 45,
+              height: 45
             }}>
               <CheckCircleIcon fontSize="medium" />
             </Avatar>
-            <Typography variant="h6" fontWeight="bold" fontSize="1.1rem">
+            <Typography variant="h6" fontWeight="bold" fontSize="1rem">
               Confirmar Actualización
             </Typography>
           </Box>
         </DialogTitle>
         <DialogContent sx={{
-          pt: 2.5,
-          pb: 1.5,
+          pt: '60px',
+          pb: 2,
           textAlign: 'center',
           backgroundColor: 'white',
           px: 3
         }}>
-          <Typography variant="body1" sx={{ mb: 1.5, color: '#1B396A', fontWeight: 'bold' }}>
+          <Typography variant="body1" sx={{ mt: 2, mb: 2, color: '#1B396A', fontWeight: 'bold' }}>
             ¿Confirma los cambios realizados?
           </Typography>
           <DialogContentText sx={{
-            fontSize: '0.9rem',
+            fontSize: '0.85rem',
             color: 'text.primary',
-            lineHeight: 1.4
+            lineHeight: 1.3
           }}>
             Esta acción guardará los cambios de forma permanente.
           </DialogContentText>
@@ -640,13 +641,14 @@ function SideBar() {
             borderRadius: 3,
             boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
             overflow: 'hidden',
-            width: '380px'
+            width: '350px',
+            maxHeight: '400px'
           }
         }}
       >
         <DialogTitle sx={{
           textAlign: 'center',
-          p: 2.5,
+          p: 2,
           backgroundColor: '#1B396A',
           color: 'white',
           fontWeight: 'bold',
@@ -656,34 +658,34 @@ function SideBar() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 1.5
+            gap: 1
           }}>
             <Avatar sx={{
               bgcolor: 'rgba(255,255,255,0.2)',
-              width: 50,
-              height: 50
+              width: 45,
+              height: 45
             }}>
               <WarningIcon fontSize="medium" />
             </Avatar>
-            <Typography variant="h6" fontWeight="bold" fontSize="1.1rem">
+            <Typography variant="h6" fontWeight="bold" fontSize="1rem">
               Descartar Cambios
             </Typography>
           </Box>
         </DialogTitle>
         <DialogContent sx={{
-          pt: 2.5,
-          pb: 1.5,
+          pt: '60px',
+          pb: 2,
           textAlign: 'center',
           backgroundColor: 'white',
           px: 3
         }}>
-          <Typography variant="body1" sx={{ mb: 1.5, color: 'text.primary', fontWeight: 'bold' }}>
+          <Typography variant="body1" sx={{ mt: 2, mb: 2, color: 'text.primary', fontWeight: 'bold' }}>
             ¿Descartar los cambios?
           </Typography>
           <DialogContentText sx={{
-            fontSize: '0.9rem',
+            fontSize: '0.85rem',
             color: 'text.primary',
-            lineHeight: 1.4
+            lineHeight: 1.3
           }}>
             Se perderán todas las modificaciones realizadas.
           </DialogContentText>
