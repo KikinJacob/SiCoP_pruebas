@@ -38,6 +38,7 @@ export default function RegistroConvocatorias() {
   const confirmRegister = async () => {
     try {
       const data = getValues();
+      console.log(data);
       await createConvocatoria(data);
       setOpenConfirmRegister(false);
       navigate("/Administracion/Convocatorias");

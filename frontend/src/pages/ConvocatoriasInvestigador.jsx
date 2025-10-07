@@ -25,15 +25,34 @@ import { getAllConvocatorias } from "../api/Convocatoria.api";
 export default function ConvocatoriasInvestigador({ user = { type: "Investigador" } }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedConvocatoria, setSelectedConvocatoria] = useState(null);
+  const [convocatorias, setConvocatorias] = useState([]);
+
+  // Cargar las convocatorias al montar el componente
 
   useEffect(() => {
     try {
       const fetchConvocatorias = async () => {
         const data = await getAllConvocatorias();
         console.log(data);
+
+        const datos = data.map((item) => ({
+          id: item.clave_convocatoria,
+          titulo: item.convocatoria,
+          fechaInicio: item.fechaInicioConvocatoria,
+          fechaFin: item.fechaFinConvocatoria,
+          presupuesto: item.presupuesto,
+          descripcion: item.descripcion,
+          requisitos: Array.isArray(item.requisitos)
+            ? item.requisitos
+            : item.requisitos
+              ? [item.requisitos]
+              : [], // Siempre será un array
+        }));
+        setConvocatorias(datos);
       }
 
       fetchConvocatorias();
+
     } catch (error) {
       console.error("Error al cargar las convocatorias: ", error);
       throw error;
@@ -41,74 +60,74 @@ export default function ConvocatoriasInvestigador({ user = { type: "Investigador
   }, [])
 
   // Datos de ejemplo para las convocatorias
-  const convocatorias = [
-    {
-      id: 1,
-      titulo: "Convocatoria de Investigación Científica 2024",
-      fechaInicio: "2024-01-15",
-      fechaFin: "2024-03-30",
-      presupuesto: "$500,000 MXN",
-      descripcion: "Convocatoria dirigida a proyectos de investigación científica que contribuyan al desarrollo tecnológico y la innovación en el ámbito académico.",
-      requisitos: ["Ser investigador activo", "Tener grado de doctorado", "Presentar propuesta detallada"],
-      areas: ["Tecnología", "Ciencias Exactas", "Innovación"],
-      estado: "Activa"
-    },
-    {
-      id: 2,
-      titulo: "Fondos para Proyectos de Innovación",
-      fechaInicio: "2024-02-01",
-      fechaFin: "2024-04-15",
-      presupuesto: "$300,000 MXN",
-      descripcion: "Apoyo financiero para proyectos innovadores que generen impacto social y económico en la región.",
-      requisitos: ["Propuesta viable", "Equipo multidisciplinario", "Plan de desarrollo"],
-      areas: ["Innovación", "Desarrollo Social", "Tecnología"],
-      estado: "Activa"
-    },
-    {
-      id: 3,
-      titulo: "Convocatoria Internacional de Colaboración",
-      fechaInicio: "2024-03-01",
-      fechaFin: "2024-05-30",
-      presupuesto: "$750,000 MXN",
-      descripcion: "Programa de colaboración internacional para el intercambio académico y desarrollo de proyectos conjuntos.",
-      requisitos: ["Colaboración internacional", "Experiencia comprobada", "Propuesta conjunta"],
-      areas: ["Colaboración", "Investigación", "Internacionalización"],
-      estado: "Próximamente"
-    },
-    {
-      id: 4,
-      titulo: "Apoyo a Jóvenes Investigadores",
-      fechaInicio: "2024-04-01",
-      fechaFin: "2024-06-15",
-      presupuesto: "$200,000 MXN",
-      descripcion: "Programa especial de apoyo para jóvenes investigadores que buscan desarrollar sus primeros proyectos independientes.",
-      requisitos: ["Menor de 35 años", "Grado de maestría mínimo", "Primera investigación independiente"],
-      areas: ["Formación", "Investigación", "Desarrollo Profesional"],
-      estado: "Activa"
-    },
-    {
-      id: 5,
-      titulo: "Convocatoria de Sustentabilidad",
-      fechaInicio: "2024-05-01",
-      fechaFin: "2024-07-30",
-      presupuesto: "$400,000 MXN",
-      descripcion: "Proyectos enfocados en la sustentabilidad ambiental y el desarrollo de tecnologías verdes.",
-      requisitos: ["Enfoque ambiental", "Impacto medible", "Viabilidad técnica"],
-      areas: ["Sustentabilidad", "Medio Ambiente", "Tecnología Verde"],
-      estado: "Activa"
-    },
-    {
-      id: 6,
-      titulo: "Fondo de Emergencia COVID-19",
-      fechaInicio: "2024-01-01",
-      fechaFin: "2024-12-31",
-      presupuesto: "$1,000,000 MXN",
-      descripcion: "Apoyo especial para investigaciones relacionadas con la pandemia y sus efectos sociales y económicos.",
-      requisitos: ["Relación con COVID-19", "Urgencia justificada", "Impacto social"],
-      areas: ["Salud", "Investigación Médica", "Impacto Social"],
-      estado: "Cerrada"
-    }
-  ];
+  // const convocatorias = [
+  //   {
+  //     id: 1,
+  //     titulo: "Convocatoria de Investigación Científica 2024",
+  //     fechaInicio: "2024-01-15",
+  //     fechaFin: "2024-03-30",
+  //     presupuesto: "$500,000 MXN",
+  //     descripcion: "Convocatoria dirigida a proyectos de investigación científica que contribuyan al desarrollo tecnológico y la innovación en el ámbito académico.",
+  //     requisitos: ["Ser investigador activo", "Tener grado de doctorado", "Presentar propuesta detallada"],
+  //     areas: ["Tecnología", "Ciencias Exactas", "Innovación"],
+  //     estado: "Activa"
+  //   },
+  //   {
+  //     id: 2,
+  //     titulo: "Fondos para Proyectos de Innovación",
+  //     fechaInicio: "2024-02-01",
+  //     fechaFin: "2024-04-15",
+  //     presupuesto: "$300,000 MXN",
+  //     descripcion: "Apoyo financiero para proyectos innovadores que generen impacto social y económico en la región.",
+  //     requisitos: ["Propuesta viable", "Equipo multidisciplinario", "Plan de desarrollo"],
+  //     areas: ["Innovación", "Desarrollo Social", "Tecnología"],
+  //     estado: "Activa"
+  //   },
+  //   {
+  //     id: 3,
+  //     titulo: "Convocatoria Internacional de Colaboración",
+  //     fechaInicio: "2024-03-01",
+  //     fechaFin: "2024-05-30",
+  //     presupuesto: "$750,000 MXN",
+  //     descripcion: "Programa de colaboración internacional para el intercambio académico y desarrollo de proyectos conjuntos.",
+  //     requisitos: ["Colaboración internacional", "Experiencia comprobada", "Propuesta conjunta"],
+  //     areas: ["Colaboración", "Investigación", "Internacionalización"],
+  //     estado: "Próximamente"
+  //   },
+  //   {
+  //     id: 4,
+  //     titulo: "Apoyo a Jóvenes Investigadores",
+  //     fechaInicio: "2024-04-01",
+  //     fechaFin: "2024-06-15",
+  //     presupuesto: "$200,000 MXN",
+  //     descripcion: "Programa especial de apoyo para jóvenes investigadores que buscan desarrollar sus primeros proyectos independientes.",
+  //     requisitos: ["Menor de 35 años", "Grado de maestría mínimo", "Primera investigación independiente"],
+  //     areas: ["Formación", "Investigación", "Desarrollo Profesional"],
+  //     estado: "Activa"
+  //   },
+  //   {
+  //     id: 5,
+  //     titulo: "Convocatoria de Sustentabilidad",
+  //     fechaInicio: "2024-05-01",
+  //     fechaFin: "2024-07-30",
+  //     presupuesto: "$400,000 MXN",
+  //     descripcion: "Proyectos enfocados en la sustentabilidad ambiental y el desarrollo de tecnologías verdes.",
+  //     requisitos: ["Enfoque ambiental", "Impacto medible", "Viabilidad técnica"],
+  //     areas: ["Sustentabilidad", "Medio Ambiente", "Tecnología Verde"],
+  //     estado: "Activa"
+  //   },
+  //   {
+  //     id: 6,
+  //     titulo: "Fondo de Emergencia COVID-19",
+  //     fechaInicio: "2024-01-01",
+  //     fechaFin: "2024-12-31",
+  //     presupuesto: "$1,000,000 MXN",
+  //     descripcion: "Apoyo especial para investigaciones relacionadas con la pandemia y sus efectos sociales y económicos.",
+  //     requisitos: ["Relación con COVID-19", "Urgencia justificada", "Impacto social"],
+  //     areas: ["Salud", "Investigación Médica", "Impacto Social"],
+  //     estado: "Cerrada"
+  //   }
+  // ];
 
   const handleOpenModal = (convocatoria) => {
     setSelectedConvocatoria(convocatoria);
@@ -239,12 +258,12 @@ export default function ConvocatoriasInvestigador({ user = { type: "Investigador
                       >
                         {selectedConvocatoria.titulo}
                       </Typography>
-                      <Chip
+                      {/* <Chip
                         label={selectedConvocatoria.estado}
                         color={getEstadoColor(selectedConvocatoria.estado)}
                         size="small"
                         sx={{ fontWeight: "bold" }}
-                      />
+                      /> */}
                     </Box>
                     <IconButton
                       aria-label="cerrar"
@@ -317,7 +336,7 @@ export default function ConvocatoriasInvestigador({ user = { type: "Investigador
 
                   <Divider sx={{ mb: 3 }} />
 
-                  {/* Áreas de investigación */}
+                  {/* Áreas de investigación
                   <Box sx={{ mb: 3 }}>
                     <Typography variant="h6" sx={{ fontWeight: "medium", mb: 2 }}>
                       Áreas de investigación
@@ -333,7 +352,7 @@ export default function ConvocatoriasInvestigador({ user = { type: "Investigador
                         />
                       ))}
                     </Box>
-                  </Box>
+                  </Box> */}
 
                   <Divider sx={{ mb: 3 }} />
 
