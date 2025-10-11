@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import TableViewer from "../../components/TableViewer";
-import { Box, Fab, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button as MuiButton } from "@mui/material";
+import { Box, Fab, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button as MuiButton, Avatar } from "@mui/material";
 import SideBarAdmin from "../../components/SideBarAdmin";
 import AddIcon from "@mui/icons-material/Add";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import WarningIcon from "@mui/icons-material/Warning";
 import { Link, useNavigate } from "react-router-dom";
 import { getLineasInv, deleteLineaInv } from "../../api/LineaInv.api";
 import { getCarreras } from "../../api/carrera.api";
@@ -118,33 +119,130 @@ function CrudLGAC() {
         <SideBarAdmin />
       </nav>
       <div className="p-5" style={{ marginTop: "5vh", marginLeft: "2vw" }}>
-        <Typography variant="h3" sx={{}}>
+        <Typography variant="h3" sx={{ marginBottom: '20px' }}>
           Lineas de Investigación
         </Typography>
-        <Fab
-          variant="extended"
-          color="primary"
-          sx={{ right: "-82vw", marginBottom: "10px" }}
-        >
-          <Link to={"/Administracion/RegistroLGAC"} className="text-white link-underline-primary">
-            <AddIcon sx={{ mr: 1 }} />
-            Agregar nueva
-          </Link>
-        </Fab>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+          <Fab
+            variant="extended"
+            color="primary"
+          >
+            <Link to={"/Administracion/RegistroLGAC"} className="text-white link-underline-primary">
+              <AddIcon sx={{ mr: 1 }} />
+              Agregar nueva
+            </Link>
+          </Fab>
+        </Box>
         <TableViewer columns={columns} rows={rows} />
       </div>
-      <Dialog open={openDelete} onClose={handleCloseDelete}>
-        <DialogTitle>Confirmar eliminación</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+      <Dialog
+        open={openDelete}
+        onClose={handleCloseDelete}
+        maxWidth="xs"
+        fullWidth
+        sx={{ zIndex: 2100 }}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+            overflow: 'hidden',
+            width: '350px',
+            maxHeight: '400px'
+          }
+        }}
+      >
+        <DialogTitle sx={{
+          textAlign: 'center',
+          p: 2,
+          backgroundColor: '#1B396A',
+          color: 'white',
+          fontWeight: 'bold',
+          position: 'relative'
+        }}>
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 1
+          }}>
+            <Avatar sx={{
+              bgcolor: 'rgba(255,255,255,0.2)',
+              width: 45,
+              height: 45
+            }}>
+              <WarningIcon fontSize="medium" />
+            </Avatar>
+            <Typography variant="h6" fontWeight="bold" fontSize="1rem">
+              Confirmar eliminación
+            </Typography>
+          </Box>
+        </DialogTitle>
+        <DialogContent sx={{
+          pt: '60px',
+          pb: 2,
+          textAlign: 'center',
+          backgroundColor: 'white',
+          px: 3
+        }}>
+          <Typography variant="body1" sx={{ mt: 2, mb: 2, color: 'text.primary', fontWeight: 'bold' }}>
             ¿Estás seguro que deseas eliminar este registro?
+          </Typography>
+          <DialogContentText sx={{
+            fontSize: '0.85rem',
+            color: 'text.primary',
+            lineHeight: 1.3
+          }}>
+            Esta acción no se puede deshacer.
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <MuiButton onClick={handleCloseDelete} color="secondary">
+        <DialogActions sx={{
+          p: 2.5,
+          justifyContent: 'center',
+          gap: 2,
+          backgroundColor: 'white'
+        }}>
+          <MuiButton
+            onClick={handleCloseDelete}
+            variant="outlined"
+            size="medium"
+            sx={{
+              borderRadius: 2,
+              px: 2.5,
+              py: 1,
+              borderColor: '#1B396A',
+              color: '#1B396A',
+              fontWeight: 'bold',
+              fontSize: '0.9rem',
+              minWidth: '110px',
+              '&:hover': {
+                backgroundColor: 'rgba(27, 57, 106, 0.05)',
+              }
+            }}
+          >
             Cancelar
           </MuiButton>
-          <MuiButton onClick={handleConfirmDelete} color="error" variant="contained">
+          <MuiButton
+            onClick={handleConfirmDelete}
+            variant="contained"
+            autoFocus
+            size="medium"
+            startIcon={<DeleteIcon fontSize="small" />}
+            sx={{
+              borderRadius: 2,
+              px: 2.5,
+              py: 1,
+              backgroundColor: '#d32f2f',
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '0.9rem',
+              minWidth: '110px',
+              '&:hover': {
+                backgroundColor: '#c62828',
+                transform: 'translateY(-1px)',
+              },
+              transition: 'all 0.3s ease'
+            }}
+          >
             Eliminar
           </MuiButton>
         </DialogActions>

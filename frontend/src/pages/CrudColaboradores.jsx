@@ -59,7 +59,7 @@ function CrudColaboradores() {
 
         const todosSeleccionados = [
             ...anteColab,
-            ...seleccionados.filter(nuevo => !anteColab.some( ant => ant.curp === nuevo.curp))
+            ...seleccionados.filter(nuevo => !anteColab.some(ant => ant.curp === nuevo.curp))
         ];
 
         console.log("Colaboradores seleccionados:", todosSeleccionados);

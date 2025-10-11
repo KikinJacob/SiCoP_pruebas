@@ -69,7 +69,7 @@ export default function Proyectos() {
     try {
       const data = await getProyecto(id);
       console.log(data);
-      navigate("/EditarProyecto", { state: { proyecto: data}});
+      navigate("/EditarProyecto", { state: { proyecto: data } });
     } catch (error) {
       console.error("Error en editar el proyecto: ", error)
     }
@@ -133,17 +133,20 @@ export default function Proyectos() {
         <SideBar />
       </nav>
       <div className="p-5" style={{ marginTop: "5vh", marginLeft: "2vw" }}>
-        <Typography variant="h3">Mis Proyectos</Typography>
-        <Fab
-          variant="extended"
-          color="primary"
-          sx={{ right: "-82vw", marginBottom: "10px" }}
-        >
-          <Link to={"/RegistroProyecto1"} className="text-white link-underline-primary">
-            <AddIcon sx={{ mr: 1 }} />
-            Registrar proyecto
-          </Link>
-        </Fab>
+        <Typography variant="h3" sx={{ marginBottom: '20px' }}>
+          Mis Proyectos
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+          <Fab
+            variant="extended"
+            color="primary"
+          >
+            <Link to={"/RegistroProyecto1"} className="text-white link-underline-primary">
+              <AddIcon sx={{ mr: 1 }} />
+              Registrar proyecto
+            </Link>
+          </Fab>
+        </Box>
         <TableViewer columns={columns} rows={rows} />
       </div>
     </Box>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Fab, Typography, Button, Grid } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,34 +14,34 @@ function Empresas() {
     const { updateProyecto, proyecto } = useRegistroProyecto();
 
     console.log("Datos del proyecto: ", proyecto);
-    
+
     useEffect(() => {
         try {
             const fetchEmpresas = async () => {
-            let seleccionados = [];
-            const seleccionadosRaw = localStorage.getItem("empresaSeleccionada");
-            if(seleccionadosRaw){
-                try {
-                    seleccionados = JSON.parse(seleccionadosRaw);
-                } catch (error) {
-                    seleccionados = [];
+                let seleccionados = [];
+                const seleccionadosRaw = localStorage.getItem("empresaSeleccionada");
+                if (seleccionadosRaw) {
+                    try {
+                        seleccionados = JSON.parse(seleccionadosRaw);
+                    } catch (error) {
+                        seleccionados = [];
+                    }
                 }
-            }
 
-            if (!Array.isArray(seleccionados)) seleccionados = [];
+                if (!Array.isArray(seleccionados)) seleccionados = [];
 
-            const dataGrid = seleccionados.map((empresas) => ({
-                ...empresas,
-                id: empresas.rfc,
-                rfc: empresas.rfc,
-                razonSocial: empresas.razonSocial,
-                sector: empresas.sector,
-                tipo_Empresa: empresas.tipo_empresa
-            }))
-            setEmpresas(dataGrid);
-            console.log(dataGrid);
-        };
-        fetchEmpresas();
+                const dataGrid = seleccionados.map((empresas) => ({
+                    ...empresas,
+                    id: empresas.rfc,
+                    rfc: empresas.rfc,
+                    razonSocial: empresas.razonSocial,
+                    sector: empresas.sector,
+                    tipo_Empresa: empresas.tipo_empresa
+                }))
+                setEmpresas(dataGrid);
+                console.log(dataGrid);
+            };
+            fetchEmpresas();
         } catch (error) {
             console.error("Error al cargar las empresas: ", error);
         }
@@ -54,7 +54,7 @@ function Empresas() {
         { field: "sector", headerName: "Sector", flex: 1 },
         { field: "tipo_Empresa", headerName: "Tipo de Empresa", flex: 1 },
     ];
-    
+
     const handleAddEmpresa = () => {
         localStorage.setItem("empresaSeleccionada", JSON.stringify(empresas));
         navigate("/CrudEmpresas");
@@ -63,16 +63,17 @@ function Empresas() {
     return (
         <Box>
             <div className="p-5" style={{ marginTop: "5vh", marginLeft: "2vw" }}>
-                <Typography variant="h3">Empresas del Proyecto</Typography>
-                <Fab
-                    variant="extended"
-                    color="primary"
-                    sx={{ right: "-82vw", marginBottom: "10px" }}
-                    onClick={() => handleAddEmpresa()}
-                >
+                <Typography variant="h3" style={{ marginBottom: "20px" }}>Empresas del Proyecto</Typography>
+                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
+                    <Fab
+                        variant="extended"
+                        color="primary"
+                        onClick={handleAddEmpresa}
+                    >
                         <AddIcon sx={{ mr: 1 }} />
                         Añadir Empresa
-                </Fab>
+                    </Fab>
+                </div>
                 <TableViewer columns={columns} rows={empresas} />
                 <Grid container spacing={2} className="p-3" sx={{ mt: 2 }}>
                     <Grid
@@ -107,8 +108,8 @@ function Empresas() {
                                 borderRadius: "20px",
                             }}
                             onClick={() => {
-                                updateProyecto({empresas});
-                                console.log({empresas});
+                                updateProyecto({ empresas });
+                                console.log({ empresas });
                                 navigate("/VinculacionFinanciamiento")
                             }}
                             onMouseEnter={(e) =>

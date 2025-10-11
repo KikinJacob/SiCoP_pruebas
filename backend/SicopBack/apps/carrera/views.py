@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.permissions import AllowAny
 from apps.carrera.models import Carrera
 from apps.carrera.api.serializers import CarreraSerializer
 
@@ -13,3 +14,4 @@ class CarreraRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
 class CarreraListAPIView(generics.ListAPIView):
     queryset = Carrera.objects.all().order_by('nombreCarrera')
     serializer_class = CarreraSerializer
+    permission_classes = [AllowAny]  # Permitir acceso sin autenticación
