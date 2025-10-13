@@ -109,7 +109,7 @@ function EditarProyectos() {
 
         const proyectoTemp = localStorage.getItem("proyectoEnEdicion");
 
-        if(proyectoTemp){
+        if (proyectoTemp) {
           const proyectoTotal = JSON.parse(proyectoTemp);
           console.log(proyectoTotal);
           reset({
@@ -139,13 +139,13 @@ function EditarProyectos() {
           })
         }
 
-        if(proyectoTemp){
+        if (proyectoTemp) {
           const proyectoTotal = JSON.parse(proyectoTemp);
           console.log(proyectoTotal.selectedMetas);
-          if(proyectoTotal?.selectedMetas){
+          if (proyectoTotal?.selectedMetas) {
             // console.lg(proyectoTotal.selectedMetas);
             setSelectedMetas(proyectoTotal.selectedMetas);
-          } 
+          }
         } else if (proyecto?.metas) {
           const metasDelProyecto = proyecto.metas.map(metaPro => {
             const baseMeta = metas.find(m => m.idMeta === metaPro.id);
@@ -239,29 +239,6 @@ function EditarProyectos() {
     }
 
     preloadProyecto();
-
-    // if (proyecto) {
-
-    //   // setNombre(proyecto.nombreProyecto || "");
-    //   // setArea(proyecto.areaDesarrolloTec || "");
-    //   // setFechaInicio(proyecto.fechaInicio || "");
-    //   // setFechaFin(proyecto.fechaFin || "");
-    //   // setResumen(proyecto.resumen || "");
-    //   // setObjetivos(proyecto.objetivos || "");
-    //   // setLider(proyecto.lider || "");
-    //   setSelectedMetas(proyecto.metas || "");
-    //   setMetasSeleccionadas(proyecto.metas || []);
-    //   // setConvocatoria(proyecto.convocatoria || "");
-    //   // setFinanciamiento(proyecto.financiamiento || false);
-    //   // setQuienFinancia(proyecto.quienFinancia || "");
-    //   // setMonto(proyecto.monto || "");
-    //   // setFechaInicioFinanciamiento(proyecto.fechaInicioFinanciamiento || "");
-    //   // setFechaFinFinanciamiento(proyecto.fechaFinFinanciamiento || "");
-
-    //   // setEmpresa(proyecto.rfc || "");
-    //   // setColaboradoresPro(proyecto.colaboradores || "");
-    //   // setEstudiantes(proyecto.estudiante || "");
-    // }
   }, [proyecto]);
 
   // Manejo de metas seleccionadas y cantidades
@@ -317,7 +294,7 @@ function EditarProyectos() {
       closeModal();
     } else {
       const values = getValues();
-      const data = {...values, estudiantes, colaboradoresPro, area, linea, empresa, convocatoria, selectedMetas};
+      const data = { ...values, estudiantes, colaboradoresPro, area, linea, empresa, convocatoria, selectedMetas };
       // console.log("Datos completos que se guarda en el localstorage: ", data);
       localStorage.setItem("proyectoEnEdicion", JSON.stringify(data));
       if (modal.type === "editar" && modal.row) {
@@ -469,19 +446,28 @@ function EditarProyectos() {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", width: "100vw", bgcolor: "#f5f5f5" }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        minHeight: "100vh",
+        // backgroundColor: "#f5f5f5",
+        paddingTop: "80px", // separa del header azul
+        paddingBottom: "50px",
+      }}
+    >
       <Box
-        className="p-5"
         sx={{
-          marginTop: "5vh",
-          marginLeft: { xs: 0, md: "2vw" },
-          width: { xs: "100vw", md: "calc(100vw - 240px)" },
-          minHeight: "95vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          width: "90%",
+          maxWidth: "900px",
+          backgroundColor: "white",
+          borderRadius: 2,
+          boxShadow: 3,
+          p: 4,
         }}
       >
+
         <Typography variant="h3" sx={{ mb: 3, width: "100%" }}>
           Editar Proyecto
         </Typography>
@@ -504,13 +490,6 @@ function EditarProyectos() {
                     />
                   )}
                 />
-                {/* <TextField
-                  label="Nombre del proyecto"
-                  value={formData.nombre}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, nombre: e.target.value }))}
-                  fullWidth
-                  required
-                /> */}
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth required>
