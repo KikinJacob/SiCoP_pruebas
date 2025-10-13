@@ -131,15 +131,11 @@ function SideBar() {
     setLoading(true);
 
     // Simular tiempo de carga
-    setTimeout(() => {
-      const simulatedUserData = {
-        username: "kikin",
-        email: "a@a.com",
-        password: ""
-      };
+    setTimeout(async () => {
+      const data = await fetchUserDataFromAPI();
 
-      setUserData(simulatedUserData);
-      setOriginalData({ ...simulatedUserData });
+      setUserData(data);
+      setOriginalData({ ...data });
       setLoading(false);
     }, 800);
   };

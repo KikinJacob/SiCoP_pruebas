@@ -9,39 +9,57 @@ from rest_framework import generics
 from apps.investigador.models import Investigador
 from apps.investigador.api.serializer import InvestigadorSerializer
 from rest_framework.permissions import IsAuthenticated
+from apps.credenciales.models import Credenciales as Credencial
 
 class InvestigadorViewSet(viewsets.ModelViewSet):
     queryset = Investigador.objects.all()
     serializer_class = InvestigadorSerializer
 
+
 class DarAccesoInvestigador(APIView):
     permission_classes = [IsAuthenticated]
+
     def post(self, request, pk): 
         try:
             investigador = Investigador.objects.get(curp=pk)
             
             if not investigador.user:
-                # Crear usuario con correo como username y email
+                
+                # Password generada por mi 
                 password_generada = "cambio123"
                 user = User.objects.create_user(
                     username=investigador.correo,
                     email=investigador.correo,
                     password=password_generada
                 )
+
+                # Crear la credencial para este usuario
+                credencial = Credencial.objects.create(
+                    Rol="Investigador",
+                    user_id=user
+                )
+
+                # Asociar ambos al investigador
                 investigador.user = user
+                investigador.id_Credencial = credencial
                 investigador.save()
 
-                # Retornar la contraseña generada si quieres
                 return Response({
-                    "detail": "Acceso otorgado",
+                    "detail": "Acceso otorgado correctamente.",
                     "usuario": investigador.correo,
                     "password": password_generada
                 }, status=status.HTTP_200_OK)
             else:
-                return Response({"detail": "El investigador ya tiene acceso"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"detail": "El investigador ya tiene acceso"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
         except Investigador.DoesNotExist:
-            return Response({"detail": "Investigador no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Investigador no encontrado"},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 class QuitarAccesoInvestigador(APIView):
     permission_classes = [IsAuthenticated]
